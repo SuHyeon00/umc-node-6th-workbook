@@ -11,3 +11,16 @@ export const getCategoryByStoreId =
 "SELECT s.id, c.name "
 + "FROM restaurant s JOIN category c ON s.category_id = c.id "
 + "WHERE s.id = ?";
+
+export const insertReviewSql = "INSERT INTO review (restaurant_id, user_id, rate, contents) VALUES (?, ?, ?, ?);";
+
+export const updateStoreRate = `
+UPDATE restaurant r
+JOIN (
+    SELECT restaurant_id, AVG(rate) AS avg_rate
+    FROM review
+    GROUP BY restaurant_id
+) rev ON r.id = rev.restaurant_id
+SET r.rate = rev.avg_rate
+WHERE r.id = ?;
+`;
