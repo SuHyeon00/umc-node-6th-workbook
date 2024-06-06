@@ -9,85 +9,149 @@ paths:
         in: body
         required: true
         schema:
-          properties:
-            category:
-              type: integer
-              description: 가게 카테고리 id
-              example: 1
-            region:
-              type: integer
-              description: 지역 id
-              example: 3
-            name:
-              type: string
-              description: 가게 명
-              example: swagger Test name
-            address:
-              type: string
-              description: 가게 주소
-              example: swagger Test address
-            status:
-              type: string
-              description: 가게 상태 (영업중, 휴업, 영업 중지)
-              example: 영업중
+          $ref: '#/definitions/CreateStoreRequest'
       responses:
         '200':
           description: 가게 등록 성공!
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 200
-              isSuccess:
-                type: boolean
-                example: true
-              code:
-                type: integer
-                example: 2000
-              message:
-                type: string
-                example: "success!"
-              data:
-                type: object
-                example: {
-                  "name": "삼성동 한식집",
-                  "region": "삼성동",
-                  "category": "한식"
-                }
-                
+            $ref: '#/definitions/CreateStoreResponse'
         '400':
           description: 잘못된 요청
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 400
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON001
-              message:
-                type: string
-                example: 잘못된 요청입니다
-
+            $ref: '#/definitions/BaseError'
         '500':
           description: 서버 에러
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 500
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON000
-              message:
-                type: string
-                example: 서버 에러, 관리자에게 문의 바랍니다.
+            $ref: '#/definitions/BaseError'
+  /stores/{store-id}/reviews:
+    post:
+      tags:
+        - Store
+      summary: 특정 가게에 리뷰 추가하기
+      parameters:
+        - name: store-id
+          in: path
+          required: true
+          type: integer
+          description: 가게 ID
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AddReviewRequest'
+      responses:
+        '201':
+          description: '리뷰 등록 성공!'
+          schema:
+            $ref: '#/definitions/StoreReviewResponse'
+        '400':
+          description: '잘못된 요청'
+          schema:
+            $ref: '#/definitions/BaseError'
+        '404':
+          description: '가게 정보가 존재하지 않음'
+          schema:
+            $ref: '#/definitions/StoreNotFoundError'
+        '500':
+          description: '서버 에러'
+          schema:
+            $ref: '#/definitions/BaseError'
+definitions:
+  BaseError:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 500
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'COMMON000'
+      message:
+        type: string
+        example: '서버 에러, 관리자에게 문의 바랍니다.'
+  StoreNotFoundError:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 404
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'STORE4001'
+      message:
+        type: string
+        example: '가게 정보가 존재하지 않습니다.'
+  StoreReviewResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 가게 명
+        example: '삼성동 한식집'
+      rate:
+        type: number
+        format: float
+        description: 가게 평점
+        example: 4.5
+  CreateStoreRequest:
+    type: object
+    properties:
+      category:
+        type: integer
+        description: 가게 카테고리 id
+        example: 1
+      region:
+        type: integer
+        description: 지역 id
+        example: 3
+      name:
+        type: string
+        description: 가게 명
+        example: swagger Test name
+      address:
+        type: string
+        description: 가게 주소
+        example: swagger Test address
+      status:
+        type: string
+        description: 가게 상태 (영업중, 휴업, 영업 중지)
+        example: 영업중
+  CreateStoreResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 200
+      isSuccess:
+        type: boolean
+        example: true
+      code:
+        type: integer
+        example: 2000
+      message:
+        type: string
+        example: "success!"
+      data:
+        type: object
+        example: {
+          "name": "삼성동 한식집",
+          "region": "삼성동",
+          "category": "한식"
+        }
+  AddReviewRequest:
+    type: object
+    properties:
+      rate:
+        type: integer
+        description: 리뷰 평점
+        example: 5
+      content:
+        type: string
+        description: 리뷰 내용
+        example: '리뷰 내용'

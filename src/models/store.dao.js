@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -24,11 +24,11 @@ export const getStore = async (storeId) => {
         const conn = await pool.getConnection();
         const [store] = await pool.query(getStoreById, storeId);
 
-        console.log(store);
-
         if(store.length == 0) {
             return -1;
         }
+
+        console.log(`${storeId}의 가게 정보: ${store}`);
 
         conn.release();
         return store;
@@ -64,6 +64,27 @@ export const getCategoryToStoreId = async (storeId) => {
         return category;
     } catch (err) {
         console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+// store에 해당하는 리뷰 정보 등록
+export const addStoreReview = async (storeId, data) => {
+    try {
+        const conn = await pool.getConnection();
+
+        const result = await conn.query(insertReviewSql, [storeId, 1, data.rate, data.content]);
+        await conn.query(updateStoreRate, [storeId]);
+        await conn.commit();
+
+        conn.release();
+        return result[0].insertId;
+    } catch (err) {
+        console.log(err);
+        if (conn) {
+            await conn.rollback();
+            conn.release();
+        }
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 }
