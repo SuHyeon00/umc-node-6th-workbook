@@ -5,11 +5,11 @@ paths:
         - Store
       summary: 특정 지역에 가게 추가하기
       parameters:
-      - name: createStore
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/CreateStoreRequest'
+        - name: createStore
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateStoreRequest'
       responses:
         '200':
           description: 가게 등록 성공!
@@ -54,6 +54,39 @@ paths:
             $ref: '#/definitions/StoreNotFoundError'
         '500':
           description: '서버 에러'
+          schema:
+            $ref: '#/definitions/BaseError'
+  /stores/{store-id}/missions:
+    post:
+      tags:
+        - Store
+      summary: 특정 가게에 미션 추가하기
+      parameters:
+        - name: store-id
+          in: path
+          required: true
+          type: integer
+          description: 가게 ID
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AddStoreMissionRequest'
+      responses:
+        '200':
+          description: 미션 추가 성공
+          schema:
+            $ref: '#/definitions/StoreMissionResponse'
+        '400':
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/BaseError'
+        '404':
+          description: 가게 정보가 존재하지 않음
+          schema:
+            $ref: '#/definitions/StoreNotFoundError'
+        '500':
+          description: 서버 에러
           schema:
             $ref: '#/definitions/BaseError'
 definitions:
@@ -155,3 +188,41 @@ definitions:
         type: string
         description: 리뷰 내용
         example: '리뷰 내용'
+  AddStoreMissionRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        description: 미션 제목
+        example: 미션 제목
+      reward:
+        type: integer
+        description: 미션 보상
+        example: 50
+      end_date_year:
+        type: integer
+        description: 마감 날짜 년도
+        example: 2024
+      end_date_month:
+        type: integer
+        description: 마감 날짜 월
+        example: 6
+      end_date_day:
+        type: integer
+        description: 마감 날짜 일
+        example: 19
+  StoreMissionResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 가게 명
+        example: '삼성동 한식집'
+      missionList:
+        type: array
+        description: 가게 미션 목록
+        items:
+          type: string
+        example: 
+          - "미션 1"
+          - "미션 2"

@@ -24,3 +24,7 @@ JOIN (
 SET r.rate = rev.avg_rate
 WHERE r.id = ?;
 `;
+
+export const insertMissionSql = "INSERT INTO mission (restaurant_id, title, reward, end_date) VALUES (?, ?, ?, ?);";
+
+export const getMissionByStoreId = "SELECT * FROM mission where restaurant_id = ?";
