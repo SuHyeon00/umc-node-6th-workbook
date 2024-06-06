@@ -20,13 +20,6 @@ export const createStore = async (body) => {
 }
 
 export const createStoreReview = async (storeId, body) => {
-    // 가게 정보 존재하는지 확인
-    const result = await getStore(storeId);
-
-    if(result == -1) {
-        throw new BaseError(status.STORE_NOT_FOUND);
-    }
-
     const createStoreReviewData = await addStoreReview(storeId, {
         'rate': body.rate,
         'content': body.content

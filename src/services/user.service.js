@@ -1,7 +1,7 @@
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { signinResponseDTO } from "../dtos/user.dto.js";
-import { addUser, getUser, setPrefer, getUserPreferToUserId } from "../models/user.dao.js";
+import { addUserMissionResponseDTO, signinResponseDTO } from "../dtos/user.dto.js";
+import { addUser, getUser, setPrefer, getUserPreferToUserId, addUserMission, getUserMission } from "../models/user.dao.js";
 
 export const joinUser = async (body) => {
     const birth = new Date(body.birthYear, body.birthMonth, body.birthDay);
@@ -24,3 +24,15 @@ export const joinUser = async (body) => {
         return signinResponseDTO(await getUser(joinUserData), await getUserPreferToUserId(joinUserData));
     }
 };
+
+export const createUserMission = async (body) => {
+    const createUserMissionData = await addUserMission({
+        'mission_id': body.mission_id
+    });
+
+    if(createUserMissionData == -1) {
+        throw new BaseError(status.BAD_REQUEST);
+    } else {
+        return addUserMissionResponseDTO(await getUser(1), await getUserMission(1));
+    }
+}
