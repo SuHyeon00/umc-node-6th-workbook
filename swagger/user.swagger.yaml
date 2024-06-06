@@ -5,104 +5,157 @@ paths:
         - User
       summary: 회원가입
       parameters:
-      - name: signIn
-        in: body
-        required: true
-        schema:
-          properties:
-            name:
-              type: string
-              description: 유저 이름
-              example: swagger
-            gender:
-              type: string
-              description: 유저 성별
-              example: M
-            birthYear:
-              type: integer
-              description: 생일 년도
-              example: 2000
-            birthMonth:
-              type: integer
-              description: 생일 월
-              example: 1
-            birthDay:
-              type: integer
-              description: 생일 일
-              example: 31
-            addr:
-              type: string
-              description: 주소
-              example: swagger Test address
-            phone:
-              type: string
-              description: 전화 번호
-              example: 010-0000-0000
-            prefer:
-              type: array
-              description: 선호 카테고리 번호
-              example: [1, 3, 5]
+        - name: signIn
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SignInRequest'
       responses:
         '200':
           description: 회원 가입 성공!
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 200
-              isSuccess:
-                type: boolean
-                example: true
-              code:
-                type: integer
-                example: 2000
-              message:
-                type: string
-                example: "success!"
-              data:
-                type: object
-                example: {
-                  "email": "swaggerTest@mail.com",
-                  "name": "swagger",
-                  "preferCategory": [
-                    "한식",
-                    "일식"
-                  ]
-                }
-                
+            $ref: '#/definitions/SignInSuccessResponse'
         '400':
           description: 잘못된 요청
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 400
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON001
-              message:
-                type: string
-                example: 잘못된 요청입니다
-
+            $ref: '#/definitions/BaseError'
         '500':
           description: 서버 에러
           schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 500
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON000
-              message:
-                type: string
-                example: 서버 에러, 관리자에게 문의 바랍니다.
+            $ref: '#/definitions/BaseError'
+
+  /users/missions:
+    post:
+      tags:
+        - User
+      summary: 사용자 미션 추가
+      description: 사용자가 도전 중인 미션에 새로운 미션을 추가합니다.
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AddUserMissionRequest'
+      responses:
+        '200':
+          description: 미션 추가 성공
+          schema:
+            $ref: '#/definitions/AddUserMissionResponse'
+        '400':
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/BaseError'
+        '500':
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/BaseError'
+
+definitions:
+  SignInRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 유저 이름
+        example: swagger
+      gender:
+        type: string
+        description: 유저 성별
+        example: M
+      birthYear:
+        type: integer
+        description: 생일 년도
+        example: 2000
+      birthMonth:
+        type: integer
+        description: 생일 월
+        example: 1
+      birthDay:
+        type: integer
+        description: 생일 일
+        example: 31
+      addr:
+        type: string
+        description: 주소
+        example: swagger Test address
+      phone:
+        type: string
+        description: 전화 번호
+        example: 010-0000-0000
+      prefer:
+        type: array
+        description: 선호 카테고리 번호
+        example: [1, 3, 5]
+
+  SignInSuccessResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 200
+      isSuccess:
+        type: boolean
+        example: true
+      code:
+        type: integer
+        example: 2000
+      message:
+        type: string
+        example: "success!"
+      data:
+        type: object
+        properties:
+          email:
+            type: string
+            example: swaggerTest@mail.com
+          name:
+            type: string
+            example: swagger
+          preferCategory:
+            type: array
+            items:
+              type: string
+            example: 
+              - 한식
+              - 일식
+
+  AddUserMissionRequest:
+    type: object
+    properties:
+      mission_id:
+        type: integer
+        description: 추가할 미션의 ID
+        example: 3
+
+  AddUserMissionResponse:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 사용자 이름
+        example: swagger
+      missionList:
+        type: array
+        description: 사용자가 도전 중인 미션 목록
+        items:
+          type: string
+        example: 
+          - "미션 1"
+          - "미션 2"
+          - "미션 3"
+
+  BaseError:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 500
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'COMMON000'
+      message:
+        type: string
+        example: '서버 에러, 관리자에게 문의 바랍니다.'

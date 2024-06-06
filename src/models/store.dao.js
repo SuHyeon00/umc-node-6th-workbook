@@ -73,6 +73,13 @@ export const addStoreReview = async (storeId, data) => {
     try {
         const conn = await pool.getConnection();
 
+        // 가게 정보 존재하는지 확인
+        const [confirm] = await getStore(storeId);
+
+        if(confirm == -1) {
+            throw new BaseError(status.STORE_NOT_FOUND);
+        }
+
         const result = await conn.query(insertReviewSql, [storeId, 1, data.rate, data.content]);
         await conn.query(updateStoreRate, [storeId]);
         await conn.commit();
