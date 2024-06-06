@@ -11,5 +11,5 @@ export const addUserMissionResponseDTO = (user, mission) => {
     for (let i = 0; i < mission[0].length; i++) {
         userMission.push(mission[0][i].title);
     }
-    return {"name": user[0].name, "missionList: ": userMission};
+    return {"name": user[0].name, "missionList": userMission};
 }

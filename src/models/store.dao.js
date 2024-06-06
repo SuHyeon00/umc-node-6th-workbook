@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -92,6 +92,43 @@ export const addStoreReview = async (storeId, data) => {
             await conn.rollback();
             conn.release();
         }
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+// store에 해당하는 미션 정보 등록
+export const addStoreMission = async (storeId, data) => {
+    try {
+        const conn = await pool.getConnection();
+
+        // 가게 정보 존재하는지 확인
+        const [confirm] = await getStore(storeId);
+
+        if(confirm == -1) {
+            throw new BaseError(status.STORE_NOT_FOUND);
+        }
+
+        const result = await pool.query(insertMissionSql, [storeId, data.title, data.reward, data.end]);
+
+        conn.release();
+        return result[0].insertId;
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+// store에 해당하는 미션 정보 조회
+export const getMissionToStoreId = async (storeId) => {
+    try {
+        const conn = await pool.getConnection();
+        const mission = await pool.query(getMissionByStoreId, storeId);
+
+        conn.release();
+
+        return mission;
+    } catch (err) {
+        console.log(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 }
