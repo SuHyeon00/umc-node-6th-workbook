@@ -15,7 +15,7 @@ export const createStore = async (body) => {
     if(createStoreData == -1) {
         throw new BaseError(status.BAD_REQUEST);
     } else {
-        return addStoreResponseDTO(await getStore(createStoreData), await getRegionToStoreId(), await getCategoryToStoreId())
+        return addStoreResponseDTO(await getStore(createStoreData), await getRegionToStoreId(createStoreData), await getCategoryToStoreId(createStoreData))
     }
 
 }

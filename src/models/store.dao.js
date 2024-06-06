@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -42,7 +42,7 @@ export const getStore = async (storeId) => {
 export const getRegionToStoreId = async (storeId) => {
     try {
         const conn = await pool.getConnection();
-        const region = await pool.query(getRegionToStoreId, storeId);
+        const region = await pool.query(getRegionByStoreId, storeId);
 
         conn.release();
 
@@ -57,7 +57,7 @@ export const getRegionToStoreId = async (storeId) => {
 export const getCategoryToStoreId = async (storeId) => {
     try {
         const conn = await pool.getConnection();
-        const category = await pool.query(getCategoryToStoreId, storeId);
+        const category = await pool.query(getCategoryByStoreId, storeId);
 
         conn.release();
 

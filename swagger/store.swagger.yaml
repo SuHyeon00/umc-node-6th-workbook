@@ -1,0 +1,93 @@
+paths:
+  /stores:
+    post:
+      tags:
+        - Store
+      summary: 특정 지역에 가게 추가하기
+      parameters:
+      - name: createStore
+        in: body
+        required: true
+        schema:
+          properties:
+            category:
+              type: integer
+              description: 가게 카테고리 id
+              example: 1
+            region:
+              type: integer
+              description: 지역 id
+              example: 3
+            name:
+              type: string
+              description: 가게 명
+              example: swagger Test name
+            address:
+              type: string
+              description: 가게 주소
+              example: swagger Test address
+            status:
+              type: string
+              description: 가게 상태 (영업중, 휴업, 영업 중지)
+              example: 영업중
+      responses:
+        '200':
+          description: 가게 등록 성공!
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              data:
+                type: object
+                example: {
+                  "name": "삼성동 한식집",
+                  "region": "삼성동",
+                  "category": "한식"
+                }
+                
+        '400':
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+
+        '500':
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
