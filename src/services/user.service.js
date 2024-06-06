@@ -30,8 +30,6 @@ export const createUserMission = async (body) => {
         'mission_id': body.mission_id
     });
 
-    console.log(`미션 저장 결과: ${createUserMissionData}`);
-
     if(createUserMissionData == -1) {
         throw new BaseError(status.BAD_REQUEST);
     } else {
