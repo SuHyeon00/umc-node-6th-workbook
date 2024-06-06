@@ -8,6 +8,7 @@ import cors from 'cors';
 
 import { specs } from './config/swagger.config.js';
 import SwaggerUi from 'swagger-ui-express';
+import { storeRouter } from './src/routes/store.route.js';
 
 dotenv.config();
 
@@ -24,7 +25,8 @@ app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형�
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // router setting
-app.use('/user', userRouter);
+app.use('/users', userRouter);
+app.use('/stores', storeRouter);
 
 // index.js
 app.use((req, res, next) => {
