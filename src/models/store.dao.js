@@ -169,3 +169,24 @@ export const getStoreReviewsCount = async (storeId) => {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 }
+
+export const getStoreMissions = async (storeId, page, size) => {
+    try {
+        const conn = await pool.getConnection();
+        size = parseInt(size);
+
+        if(page == null || page == "undefined" || typeof page == "undefined") {
+            const [missions] = await pool.query(getStoreMissionByMissionIdAtFirst, [storeId, size]);
+            conn.release();
+            return missions;
+        } else {
+            page = parseInt(page);
+            const [missions] = await pool.query(getStoreMissionByMissionId, [storeId, size, (page - 1) * size]);
+            conn.release();
+            return missions;
+        }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
