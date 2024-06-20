@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission } from "./user.sql.js";
+import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission, getUserReviewByUserIdAtFirst, getUserReviewByUserId, getUserReviewCount } from "./user.sql.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
@@ -98,6 +98,48 @@ export const getUserMission = async (userId) => {
         conn.release();
 
         return mission;
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+// 사용자 리뷰 정보 조회
+export const getUserReviews = async (userId, size, page) => {
+    try {
+        const conn = await pool.getConnection();
+
+        const [user] = await pool.query(getUserByID, userId);
+
+        if(user.length == 0) {
+            throw new BaseError(status.MEMBER_NOT_FOUND);
+        }
+
+        size = parseInt(size);
+
+        if(page == "undefined" || typeof page == "undefined" || page == null) {
+            const [reviews] = await pool.query(getUserReviewByUserIdAtFirst, [userId, size]);
+            conn.release();
+            return reviews;
+        } else {
+            page = parseInt(page);
+            const [reviews] = await pool.query(getUserReviewByUserId, [userId, size, (page-1)*size]);
+            conn.release();
+            return reviews;
+        }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getUserReviewsCount = async (userId) => {
+    try {
+        const conn = await pool.getConnection();
+
+        const [result] = await pool.query(getUserReviewCount, userId);
+        conn.release();
+        return result[0].count;
     } catch (err) {
         console.log(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);

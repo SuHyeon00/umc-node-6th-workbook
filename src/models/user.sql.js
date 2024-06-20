@@ -18,3 +18,17 @@ export const getUserMissionByUserId =
 + "FROM mission m "
 + "JOIN user_mission um ON m.id = um.mission_id "
 + "WHERE um.user_id = ?";
+
+export const getUserReviewByUserId =
+"SELECT u.name, u.id, r.id, r.rate, r.contents, r.created_at "
++ "FROM review r JOIN user u ON r.user_id = u.id "
++ "WHERE r.user_id = ? "
++ "ORDER BY r.id DESC LIMIT ? OFFSET ?;";
+
+export const getUserReviewByUserIdAtFirst =
+"SELECT u.name, u.id, r.id, r.rate, r.contents, r.created_at "
++ "FROM review r JOIN user u ON r.user_id = u.id "
++ "WHERE r.user_id = ? "
++ "ORDER BY r.id DESC LIMIT ?;";
+
+export const getUserReviewCount = "SELECT COUNT(*) AS count FROM review WHERE user_id = ?;";
