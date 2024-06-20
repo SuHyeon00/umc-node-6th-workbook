@@ -1,7 +1,7 @@
 import { status } from "../../config/response.status.js";
 import { response } from "../../config/response.js";
 import { joinUser, createUserMission } from "../services/user.service.js";
-import { getUserMissionNotFinished, getUserReview } from "../provider/user.provider.js";
+import { completeUserMission, getUserMissionNotFinished, getUserReview } from "../provider/user.provider.js";
 
 export const userSignin = async (req, res, next) => {
     console.log("회원가입을 요청하였습니다!");
@@ -29,4 +29,13 @@ export const userMissionNotFinishedPreview = async (req, res, next) => {
     console.log("params: ", req.params);
 
     res.send(response(status.SUCCESS, await getUserMissionNotFinished(parseInt(req.params.userId), req.query)));
+}
+
+export const userMissionComplete = async (req, res, next) => {
+    console.log("유저의 미션을 완료합니다!");
+    console.log("params: ", req.params);
+
+    await completeUserMission(parseInt(req.params.userId), parseInt(req.params.missionId))
+
+    res.send(response(status.SUCCESS));
 }

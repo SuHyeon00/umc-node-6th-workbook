@@ -128,6 +128,44 @@ paths:
           schema:
             $ref: '#/definitions/BaseError'
 
+  /users/{user-id}/missions/{mission-id}:
+    patch:
+      tags:
+        - User
+      summary: 진행중인 미션 진행 완료로 바꾸기
+      parameters:
+        - name: user-id
+          in: path
+          required: true
+          type: integer
+          description: 유저 ID
+        - name: mission-id
+          in: path
+          required: true
+          type: integer
+          description: 미션 ID
+      responses:
+        '200':
+          description: 진행중인 미션 진행 완료로 바꾸기 성공
+          schema:
+            $ref: '#/definitions/DefaultSuccessResponse'
+        '400':
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/ParameterNotFoundError'
+        '404':
+          description: 유저 정보가 존재하지 않음
+          schema:
+            $ref: '#/definitions/UsereNotFoundError'
+        '401':
+          description: 미션 정보가 존재하지 않음
+          schema:
+            $ref: '#/definitions/MissionNotFoundError'
+        '500':
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/BaseError'
+
 definitions:
   SignInRequest:
     type: object
@@ -306,6 +344,19 @@ definitions:
                   format: date
                   example: "2024.06.21"
 
+  DefaultSuccessResponse:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        example: true
+      code:
+        type: integer
+        example: 2000
+      message:
+        type: string
+        example: "success!"
+
   ParameterNotFoundError:
     type: object
     properties:
@@ -344,3 +395,15 @@ definitions:
       message:
         type: string
         example: '사용자가 없습니다.'
+  MissionNotFoundError:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'MISSION4002'
+      message:
+        type: string
+        example: '진행중인 미션이 아닙니다.'

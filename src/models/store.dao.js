@@ -14,7 +14,11 @@ export const addStore = async (data) => {
         return result[0].insertId;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 };
 
@@ -32,7 +36,11 @@ export const getStore = async (storeId) => {
         return store;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -47,7 +55,11 @@ export const getRegionToStoreId = async (storeId) => {
         return region;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -62,7 +74,11 @@ export const getCategoryToStoreId = async (storeId) => {
         return category;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -90,7 +106,12 @@ export const addStoreReview = async (storeId, data) => {
             await conn.rollback();
             conn.release();
         }
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -112,7 +133,11 @@ export const addStoreMission = async (storeId, data) => {
         return result[0].insertId;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -127,7 +152,11 @@ export const getMissionToStoreId = async (storeId) => {
         return mission;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -153,7 +182,11 @@ export const getStoreReviews = async (storeId, cursorId, size) => {
         }
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -166,7 +199,11 @@ export const getStoreReviewsCount = async (storeId) => {
         return count[0].count;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -195,7 +232,11 @@ export const getStoreMissions = async (storeId, page, size) => {
         }
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
 
@@ -208,6 +249,10 @@ export const getStoreMissionsCount = async (storeId) => {
         return count[0].count;
     } catch (err) {
         console.log(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
+        if(err instanceof BaseError) {
+            throw err;
+        } else {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
     }
 }
