@@ -26,4 +26,5 @@ export const status = {
     STORE_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "STORE4001", "message": "가게 정보가 존재하지 않습니다."},
     MISSION_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "MISSION4001", "message": "이미 도전을 시작한 미션입니다."},
     MISSION_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "MISSION4002", "message": "진행중인 미션이 아닙니다."},
+    MISSION_ALREADY_FINISHED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "MISSION4003", "message": "이미 완료한 미션입니다."},
 }
