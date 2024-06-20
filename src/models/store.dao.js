@@ -173,6 +173,14 @@ export const getStoreReviewsCount = async (storeId) => {
 export const getStoreMissions = async (storeId, page, size) => {
     try {
         const conn = await pool.getConnection();
+
+        // 가게 정보 존재하는지 확인
+        const [confirm] = await getStore(storeId);
+
+        if(confirm == -1) {
+            throw new BaseError(status.STORE_NOT_FOUND);
+        }
+        
         size = parseInt(size);
 
         if(page == null || page == "undefined" || typeof page == "undefined") {
