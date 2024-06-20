@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount, getStoreMissionCount } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount, getStoreMissionCount, getStoreMissionByMissionIdAtFirst, getStoreMissionByMissionId } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
