@@ -28,3 +28,17 @@ WHERE r.id = ?;
 export const insertMissionSql = "INSERT INTO mission (restaurant_id, title, reward, end_date) VALUES (?, ?, ?, ?);";
 
 export const getMissionByStoreId = "SELECT * FROM mission where restaurant_id = ?";
+
+export const getStoreReviewByReviewId =
+"SELECT u.name, u.id, r.id, r.rate, r.contents, r.created_at "
++ "FROM review r JOIN user u ON r.user_id = u.id "
++ "WHERE r.restaurant_id = ? AND r.id < ? "
++ "ORDER BY r.id DESC LIMIT ?;";
+
+export const getStoreReviewByReviewIdAtFirst =
+"SELECT u.name, u.id, r.id, r.rate, r.contents, r.created_at "
++ "FROM review r JOIN user u ON r.user_id = u.id "
++ "WHERE r.restaurant_id = ? "
++ "ORDER BY r.id DESC LIMIT ?;";
+
+export const getStoreReviewCount = "SELECT COUNT(*) AS count FROM review WHERE restaurant_id = ?;";
