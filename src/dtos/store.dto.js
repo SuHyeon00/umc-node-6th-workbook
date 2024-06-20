@@ -13,3 +13,24 @@ export const addStoreMissionResponseDTO = (store, mission) => {
     }
     return {"name": store[0].name, "missionList": storeMission};
 }
+
+export const getStoreReviewResponseDTO = (storeReview, count) => {
+    const reviews = [];
+
+    for (let i = 0; i < storeReview.length; i++) {
+        reviews.push({
+            "nickname": storeReview[i].name,
+            "create_date": formatDate(storeReview[i].created_at),
+            "rate": storeReview[i].rate,
+            "content": storeReview[i].contents
+        });
+    }
+    return {"totalElements": count, "reviews": reviews};
+}
+
+const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}.${month}.${day}`;
+}

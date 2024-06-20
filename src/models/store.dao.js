@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -27,8 +27,6 @@ export const getStore = async (storeId) => {
         if(store.length == 0) {
             return -1;
         }
-
-        console.log(`${storeId}의 가게 정보: ${store}`);
 
         conn.release();
         return store;
@@ -127,6 +125,45 @@ export const getMissionToStoreId = async (storeId) => {
         conn.release();
 
         return mission;
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getStoreReviews = async (storeId, cursorId, size) => {
+    try {
+        const conn = await pool.getConnection();
+
+        // 가게 정보 존재하는지 확인
+        const [confirm] = await getStore(storeId);
+
+        if(confirm == -1) {
+            throw new BaseError(status.STORE_NOT_FOUND);
+        }
+
+        if(cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null) {
+            const [reviews] = await pool.query(getStoreReviewByReviewIdAtFirst, [storeId, parseInt(size)]);
+            conn.release();
+            return reviews;
+        } else {
+            const [reviews] = await pool.query(getStoreReviewByReviewId, [storeId, parseInt(cursorId), parseInt(size)]);
+            conn.release();
+            return reviews;
+        }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getStoreReviewsCount = async (storeId) => {
+    try {
+        const conn = await pool.getConnection();
+        const [count] = await pool.query(getStoreReviewCount, storeId);
+
+        conn.release();
+        return count[0].count;
     } catch (err) {
         console.log(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
