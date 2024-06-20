@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission, getUserReviewByUserIdAtFirst, getUserReviewByUserId, getUserReviewCount, getUserMissionsByUserIdAtFirst, getUserMissionsByUserId, getUserMissionCount, completeUserMission } from "./user.sql.js";
+import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission, getUserReviewByUserIdAtFirst, getUserReviewByUserId, getUserReviewCount, getUserMissionsByUserIdAtFirst, getUserMissionsByUserId, getUserMissionCount, completeUserMission, getUserMissionByUserIdAndMissionId } from "./user.sql.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
@@ -231,17 +231,22 @@ export const updateUserMission = async (userId, missionId) => {
     try {
         const conn = await pool.getConnection();
 
-        const [confirm] = await pool.query(confirmUserMission, missionId);
-
-        if(!confirm[0].isExistUserMission){
-            conn.release();
-            throw new BaseError(status.MISSION_NOT_FOUND)
-        }
-
         const [user] = await pool.query(getUserByID, userId);
 
         if(user.length == 0) {
             throw new BaseError(status.MEMBER_NOT_FOUND);
+        }
+
+        // 이미 완료된 미션인지 체크
+        const [mission] = await pool.query(getUserMissionByUserIdAndMissionId, [userId, missionId]);
+        if(mission.length == 0){
+            conn.release();
+            throw new BaseError(status.MISSION_NOT_FOUND);
+        }
+
+        if(mission[0].is_finished){
+            conn.release();
+            throw new BaseError(status.MISSION_ALREADY_FINISHED);
         }
 
         await pool.query(completeUserMission, [userId, missionId]);

@@ -161,6 +161,10 @@ paths:
           description: 미션 정보가 존재하지 않음
           schema:
             $ref: '#/definitions/MissionNotFoundError'
+        '402':
+          description: 이미 완료한 미션
+          schema:
+            $ref: '#/definitions/MissionAlreadyFinishedError'
         '500':
           description: 서버 에러
           schema:
@@ -407,3 +411,15 @@ definitions:
       message:
         type: string
         example: '진행중인 미션이 아닙니다.'
+  MissionAlreadyFinishedError:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'MISSION4003'
+      message:
+        type: string
+        example: '이미 완료한 미션입니다.'
