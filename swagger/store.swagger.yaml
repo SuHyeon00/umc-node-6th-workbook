@@ -18,7 +18,7 @@ paths:
         '400':
           description: 잘못된 요청
           schema:
-            $ref: '#/definitions/BaseError'
+            $ref: '#/definitions/ParameterNotFoundError'
         '500':
           description: 서버 에러
           schema:
@@ -47,7 +47,7 @@ paths:
         '400':
           description: '잘못된 요청'
           schema:
-            $ref: '#/definitions/BaseError'
+            $ref: '#/definitions/ParameterNotFoundError'
         '404':
           description: '가게 정보가 존재하지 않음'
           schema:
@@ -84,7 +84,7 @@ paths:
         '400':
           description: 잘못된 요청
           schema:
-            $ref: '#/definitions/BaseError'
+            $ref: '#/definitions/ParameterNotFoundError'
         '404':
           description: 가게 정보가 존재하지 않음
           schema:
@@ -117,7 +117,7 @@ paths:
         '400':
           description: 잘못된 요청
           schema:
-            $ref: '#/definitions/BaseError'
+            $ref: '#/definitions/ParameterNotFoundError'
         '404':
           description: 가게 정보가 존재하지 않음
           schema:
@@ -127,6 +127,21 @@ paths:
           schema:
             $ref: '#/definitions/BaseError'
 definitions:
+  ParameterNotFoundError:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 400
+      isSuccess:
+        type: boolean
+        example: false
+      code:
+        type: string
+        example: 'VALID4001'
+      message:
+        type: string
+        example: '전달한 파라미터 정보가 잘못되었습니다.'
   BaseError:
     type: object
     properties:
