@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission, getUserReviewByUserIdAtFirst, getUserReviewByUserId, getUserReviewCount } from "./user.sql.js";
+import { connectFoodCategory, getUserByID, insertUserSql, getPreferToUserId, insertUserMissionSql, getUserMissionByUserId, confirmUserMission, getUserReviewByUserIdAtFirst, getUserReviewByUserId, getUserReviewCount, getUserMissionsByUserIdAtFirst, getUserMissionsByUserId, getUserMissionCount } from "./user.sql.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
@@ -138,6 +138,47 @@ export const getUserReviewsCount = async (userId) => {
         const conn = await pool.getConnection();
 
         const [result] = await pool.query(getUserReviewCount, userId);
+        conn.release();
+        return result[0].count;
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getUserMissions = async (userId, isFinished, size, page) => {
+    try {
+        const conn = await pool.getConnection();
+
+        const [user] = await pool.query(getUserByID, userId);
+
+        if(user.length == 0) {
+            throw new BaseError(status.MEMBER_NOT_FOUND);
+        }
+
+        size = parseInt(size);
+
+        if(page == "undefined" || typeof page == "undefined" || page == null) {
+            const [missions] = await pool.query(getUserMissionsByUserIdAtFirst, [userId, isFinished, size]);
+            conn.release();
+            return missions;
+        } else {
+            page = parseInt(page);
+            const [missions] = await pool.query(getUserMissionsByUserId, [userId, isFinished, size, (page-1)*size]);
+            conn.release();
+            return missions;
+        }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getUserMissionsCount = async (userId, isFinished) => {
+    try {
+        const conn = await pool.getConnection();
+
+        const [result] = await pool.query(getUserMissionCount, [userId, isFinished]);
         conn.release();
         return result[0].count;
     } catch (err) {

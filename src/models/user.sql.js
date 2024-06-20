@@ -32,3 +32,19 @@ export const getUserReviewByUserIdAtFirst =
 + "ORDER BY r.id DESC LIMIT ?;";
 
 export const getUserReviewCount = "SELECT COUNT(*) AS count FROM review WHERE user_id = ?;";
+
+export const getUserMissionsByUserId =
+"SELECT r.name, m.title, m.reward, m.end_date "
++ "FROM mission m JOIN user_mission um ON m.id = um.mission_id "
++ "JOIN restaurant r ON m.restaurant_id = r.id "
++ "WHERE um.user_id = ? and um.is_finished = ? "
++ "ORDER BY m.id DESC LIMIT ? OFFSET ?;";
+
+export const getUserMissionsByUserIdAtFirst =
+"SELECT r.name, m.title, m.reward, m.end_date "
++ "FROM mission m JOIN user_mission um ON m.id = um.mission_id "
++ "JOIN restaurant r ON m.restaurant_id = r.id "
++ "WHERE um.user_id = ? and um.is_finished = ? "
++ "ORDER BY m.id DESC LIMIT ?;";
+
+export const getUserMissionCount = "SELECT COUNT(*) AS count FROM user_mission WHERE user_id = ? and is_finished = ?;";
