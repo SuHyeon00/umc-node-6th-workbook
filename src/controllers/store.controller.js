@@ -30,3 +30,10 @@ export const storeReviewPreview = async (req, res, next) => {
 
     res.send(response(status.SUCCESS, await getStoreReview(parseInt(req.params.storeId), req.query)));
 }
+
+export const storeMissionPreview = async (req, res, next) => {
+    console.log("가게 미션 미리보기 요청");
+    console.log("params: ", req.params);
+
+    res.send(response(status.SUCCESS, await getStoreMission(parseInt(req.params.storeId), req.query)));
+}
