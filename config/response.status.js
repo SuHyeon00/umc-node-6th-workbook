@@ -25,4 +25,5 @@ export const status = {
     PARAMETER_IS_WRONG: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "VALID4001", "message": "전달한 파라미터 정보가 잘못되었습니다."},
     STORE_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "STORE4001", "message": "가게 정보가 존재하지 않습니다."},
     MISSION_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "MISSION4001", "message": "이미 도전을 시작한 미션입니다."},
+    MISSION_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "MISSION4002", "message": "진행중인 미션이 아닙니다."},
 }

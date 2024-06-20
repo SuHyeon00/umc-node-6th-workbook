@@ -48,3 +48,5 @@ export const getUserMissionsByUserIdAtFirst =
 + "ORDER BY m.id DESC LIMIT ?;";
 
 export const getUserMissionCount = "SELECT COUNT(*) AS count FROM user_mission WHERE user_id = ? and is_finished = ?;";
+
+export const completeUserMission = "UPDATE user_mission SET is_finished = 1 WHERE user_id = ? AND mission_id = ?;";
