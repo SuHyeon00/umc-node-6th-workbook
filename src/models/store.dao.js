@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount, getStoreMissionCount } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -185,6 +185,19 @@ export const getStoreMissions = async (storeId, page, size) => {
             conn.release();
             return missions;
         }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getStoreMissionsCount = async (storeId) => {
+    try {
+        const conn = await pool.getConnection();
+        const [count] = await pool.query(getStoreMissionCount, storeId);
+
+        conn.release();
+        return count[0].count;
     } catch (err) {
         console.log(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
