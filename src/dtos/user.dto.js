@@ -28,9 +28,23 @@ export const getUserReviewResponseDTO = (userReview, count) => {
     return {"totalElements": count, "reviews": reviews};
 }
 
+export const getUserMissionResponseDTO = (userMission, count) => {
+    const missions = [];
+
+    for (let i = 0; i < userMission.length; i++) {
+        missions.push({
+            "restaurant_name": userMission[i].name,
+            "title": userMission[i].title,
+            "reward": userMission[i].reward,
+            "end_date": formatDate(userMission[i].end_date)
+        });
+    }
+    return {"totalElements": count, "missions": missions};
+}
+
 const formatDate = (date) => {
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 맞추기
+    const day = String(date.getDate()).padStart(2, '0'); // 일을 2자리로 맞추기
     return `${year}.${month}.${day}`;
 }
