@@ -48,4 +48,9 @@ export const getStoreMissionByMissionId =
 + "FROM mission WHERE restaurant_id = ? "
 + "ORDER BY id DESC LIMIT ? OFFSET ?;";
 
+export const getStoreMissionByMissionIdAtFirst =
+"SELECT title, reward, end_date "
++ "FROM mission WHERE restaurant_id = ? "
++ "ORDER BY id DESC LIMIT ?;";
+
 export const getStoreMissionCount = "SELECT COUNT(*) AS count FROM mission WHERE restaurant_id = ?;";
