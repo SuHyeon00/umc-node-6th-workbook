@@ -28,6 +28,19 @@ export const getStoreReviewResponseDTO = (storeReview, count) => {
     return {"totalElements": count, "reviews": reviews};
 }
 
+export const getStoreMissionResponseDTO = (storeMission, count) => {
+    const missions = [];
+
+    for (let i = 0; i < storeMission.length; i++) {
+        missions.push({
+            "title": storeMission[i].title,
+            "reward": storeMission[i].reward,
+            "end_date": formatDate(storeMission[i].end_date)
+        });
+    }
+    return {"totalElements": count, "missions": missions};
+}
+
 const formatDate = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;

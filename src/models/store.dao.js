@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount } from "./store.sql.js";
+import { insertStoreSql, getStoreById, getRegionByStoreId, getCategoryByStoreId, insertReviewSql, updateStoreRate, insertMissionSql, getMissionByStoreId, getStoreReviewByReviewIdAtFirst, getStoreReviewByReviewId, getStoreReviewCount, getStoreMissionCount, getStoreMissionByMissionIdAtFirst, getStoreMissionByMissionId } from "./store.sql.js";
 
 // Store 데이터 삽입
 export const addStore = async (data) => {
@@ -161,6 +161,48 @@ export const getStoreReviewsCount = async (storeId) => {
     try {
         const conn = await pool.getConnection();
         const [count] = await pool.query(getStoreReviewCount, storeId);
+
+        conn.release();
+        return count[0].count;
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getStoreMissions = async (storeId, page, size) => {
+    try {
+        const conn = await pool.getConnection();
+
+        // 가게 정보 존재하는지 확인
+        const [confirm] = await getStore(storeId);
+
+        if(confirm == -1) {
+            throw new BaseError(status.STORE_NOT_FOUND);
+        }
+        
+        size = parseInt(size);
+
+        if(page == null || page == "undefined" || typeof page == "undefined") {
+            const [missions] = await pool.query(getStoreMissionByMissionIdAtFirst, [storeId, size]);
+            conn.release();
+            return missions;
+        } else {
+            page = parseInt(page);
+            const [missions] = await pool.query(getStoreMissionByMissionId, [storeId, size, (page - 1) * size]);
+            conn.release();
+            return missions;
+        }
+    } catch (err) {
+        console.log(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getStoreMissionsCount = async (storeId) => {
+    try {
+        const conn = await pool.getConnection();
+        const [count] = await pool.query(getStoreMissionCount, storeId);
 
         conn.release();
         return count[0].count;

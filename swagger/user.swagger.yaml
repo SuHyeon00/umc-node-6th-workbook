@@ -11,7 +11,7 @@ paths:
           schema:
             $ref: '#/definitions/SignInRequest'
       responses:
-        '200':
+        '201':
           description: 회원 가입 성공!
           schema:
             $ref: '#/definitions/SignInSuccessResponse'
@@ -49,6 +49,7 @@ paths:
           description: 서버 에러
           schema:
             $ref: '#/definitions/BaseError'
+
   /users/{user-id}/reviews:
     get:
       tags:
@@ -128,19 +129,16 @@ definitions:
   SignInSuccessResponse:
     type: object
     properties:
-      status:
-        type: integer
-        example: 200
       isSuccess:
         type: boolean
         example: true
       code:
         type: integer
-        example: 2000
+        example: 2010
       message:
         type: string
-        example: "success!"
-      data:
+        example: "created!"
+      result:
         type: object
         properties:
           email:
@@ -168,33 +166,45 @@ definitions:
   AddUserMissionResponse:
     type: object
     properties:
-      name:
-        type: string
-        description: 사용자 이름
-        example: swagger
-      missionList:
-        type: array
-        description: 사용자가 도전 중인 미션 목록
-        items:
-          type: string
-        example: 
-          - "미션 1"
-          - "미션 2"
-          - "미션 3"
-
-  UserReviewsResponse:
-    type: object
-    properties:
-      success:
+      isSuccess:
         type: boolean
         example: true
       code:
         type: integer
-        example: 200
+        example: 2000
       message:
         type: string
-        example: "OK"
-      data:
+        example: "success!"
+      result:
+        type: object
+        properties:
+          name:
+            type: string
+            description: 사용자 이름
+            example: swagger
+          missionList:
+            type: array
+            description: 사용자가 도전 중인 미션 목록
+            items:
+              type: string
+            example: 
+              - "미션 1"
+              - "미션 2"
+              - "미션 3"
+
+  UserReviewsResponse:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        example: true
+      code:
+        type: integer
+        example: 2000
+      message:
+        type: string
+        example: "success!"
+      result:
         type: object
         properties:
           totalElements:
@@ -223,9 +233,6 @@ definitions:
   ParameterNotFoundError:
     type: object
     properties:
-      status:
-        type: integer
-        example: 400
       isSuccess:
         type: boolean
         example: false
@@ -239,9 +246,6 @@ definitions:
   BaseError:
     type: object
     properties:
-      status:
-        type: integer
-        example: 500
       isSuccess:
         type: boolean
         example: false
@@ -255,9 +259,6 @@ definitions:
   UsereNotFoundError:
     type: object
     properties:
-      status:
-        type: integer
-        example: 404
       isSuccess:
         type: boolean
         example: false
